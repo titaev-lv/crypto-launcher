@@ -151,6 +151,32 @@ switch ($action) {
             $data['msg'] = 'STOPPED';
         }
         break;
+    case 'daemon_proc':
+        $data_j = '';
+        $id = ftok($daemon_path."/ftok/ExternalRAM.php", 'A');
+        $shmId = shm_attach($id);
+        $var = 1;
+        $ret_data = array();
+        if(shm_has_var($shmId, $var)) {
+            $data_j = shm_get_var($shmId, $var);
+        } 
+        
+        if(!empty($data_j)) {
+            $success = true;
+        }
+        else {
+            shm_remove($shmId);
+        }
+        shm_detach($shmId);
+        if(isset($success)){
+            $data['status'] = 'ok';
+            $data['msg'] = json_decode($data_j,JSON_OBJECT_AS_ARRAY);
+        }
+        else {
+            $data['status'] = 'error';
+            $data['msg'] = 'Error. Empty RAM';
+        } 
+        break;
     default:
         $data['status'] = 'error';
         $data['msg'] = 'Error. Undefined action';
