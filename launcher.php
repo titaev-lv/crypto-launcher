@@ -141,7 +141,7 @@ switch ($action) {
         break;
     case 'status':
         if($status == 1) {
-            $data['status_daemon'] = 0;
+            $data['status_daemon'] = 1;
             $data['status'] = 'ok';
             $data['msg'] = 'ACTIVE';
         }
